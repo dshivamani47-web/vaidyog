@@ -9,6 +9,7 @@ RUN apt-get update \
         libicu-dev \
         libzip-dev \
         libsqlite3-dev \
+        libonig-dev \
         libpng-dev \
         libjpeg62-turbo-dev \
         libfreetype6-dev \
@@ -57,7 +58,7 @@ ENV SESSION_DRIVER=file
 ENV CACHE_STORE=file
 ENV QUEUE_CONNECTION=sync
 
-# Create SQLite database and Laravel writable directories
+# Create SQLite database and writable directories
 RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
@@ -71,5 +72,5 @@ RUN mkdir -p \
 # Render port
 EXPOSE 10000
 
-# Run migrations and start Apache
+# Start Laravel migrations and Apache
 CMD ["sh", "-c", "php artisan migrate --force && apache2-foreground"]
