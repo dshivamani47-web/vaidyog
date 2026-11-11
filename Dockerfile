@@ -1,17 +1,4 @@
 
-# Frontend build stage
-FROM node:22-alpine AS frontend
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-RUN npm run build
-
-
-# Laravel PHP + Apache stage
 FROM php:8.3-apache
 
 RUN apt-get update && apt-get install -y \
@@ -29,9 +16,6 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-COPY --from=frontend /app/public/build ./public/build
-
-# Apache configuration
 RUN a2enmod rewrite headers \
     && sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf \
     && sed -i 's/:80>/:10000>/' /etc/apache2/sites-available/000-default.conf \
